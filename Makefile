@@ -92,11 +92,14 @@ devdeps: .devdeps
 lint: devdeps
 	@$(PIPENV) run flake8
 
+pytest: devdeps
+	@$(PIPENV) run pytest -v -r wsx
+
 fix-formatting: devdeps
 	@$(PIPENV) run black .
 
 fix-isort: devdeps
-	@find kmk/ user_keymaps/ -name "*.py" | xargs $(PIPENV) run isort
+	@find tests/ kmk/ user_keymaps/ -name "*.py" | xargs $(PIPENV) run isort
 
 clean:
 	@echo "===> Cleaning build artifacts"
@@ -112,7 +115,7 @@ powerwash: clean
 	@echo "===> Removing pipenv-managed virtual environment"
 	@$(PIPENV) --rm || true
 
-test: lint
+test: lint pytest
 
 reset-bootloader:
 	@echo "===> Rebooting your board to bootloader (safe to ignore file not found errors)"
